@@ -8,6 +8,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\base\InvalidConfigException;
 use Yii;
+use yii\web\NotFoundHttpException;
 
 /**
  * Class NewsController
@@ -51,6 +52,7 @@ class NewsController extends Controller
     /**
      * @param int $id
      * @return string
+     * @throws NotFoundHttpException
      */
     public function actionUpdate(int $id = 0)
     {
@@ -79,6 +81,10 @@ class NewsController extends Controller
     public function actionDelete(int $id)
     {
         $model = News::findOne($id);
+        if (!$model) {
+            throw new NotFoundHttpException();
+        }
+
         if ($model->delete()) {
             Yii::$app->session->addFlash('success', 'Успешно удалено');
         } else {
